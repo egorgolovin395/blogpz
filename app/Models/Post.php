@@ -2,14 +2,26 @@
 
 namespace App\Models;
 
-
-use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
     use Sluggable;
+    use HasFactory;
 
+    protected $fillable = ['title', 'slug', 'description', 'content', 'category_id', 'thumbnail', 'views'];
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
     public function sluggable(): array
     {
         return [
@@ -17,15 +29,5 @@ class Post extends Model
                 'source' => 'title'
             ]
         ];
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 }
